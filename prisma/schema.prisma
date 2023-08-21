@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// SOCIAL can be added
+enum LoginType {
+  LOCAL
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  nickName String @unique
+  role UserRole
+  loginType LoginType
+
+  // Local type properties
+  username String?
+  password String?
+
+  // Social type properties
+  // socialId String?
+  // socialType SocialType?
+  refreshToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // TODO
+  // ref: https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
+  // deleted Boolean @default(false)
+  // deletedAt DateTime?
+}
