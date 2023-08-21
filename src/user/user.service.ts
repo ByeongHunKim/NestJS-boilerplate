@@ -11,6 +11,8 @@ import { NameGenerator } from '@/src/user/name.generator'
 import invariant from 'tiny-invariant'
 import { comparePassword, hashPassword } from '@/src/user/password.util'
 import { UserDto } from '@/src/user/dto/user.dto'
+import EntityNotFoundError from '@/src/error/NotFoundError'
+import EntityConflictError from '@/src/error/ConflictError'
 
 @Injectable()
 export class UserService {
@@ -39,6 +41,14 @@ export class UserService {
         id,
       },
     })
+  }
+
+  async validateUserExists(id: number): Promise<User> {
+    const user = await this.findById(id)
+    if (!user) {
+      throw new EntityNotFoundError(`User id: ${id} not exist`)
+    }
+    return user
   }
 
   async findByEmail(email: string): Promise<User> {
@@ -78,7 +88,9 @@ export class UserService {
       createDto.username,
     )
     if (isUsernameDuplicated) {
-      throw new Error(`username: ${createDto.username} duplicated`)
+      throw new EntityConflictError(
+        `username: ${createDto.username} duplicated`,
+      )
     }
 
     const fullCreateDto: LocalUserCreateDto = createDto as LocalUserCreateDto
@@ -150,7 +162,7 @@ export class UserService {
     return users.map(this.mapUserToUserDto)
   }
 
-  private mapUserToUserDto(user: User): UserDto {
+  mapUserToUserDto(user: User): UserDto {
     return {
       id: user.id,
       email: user.email,
