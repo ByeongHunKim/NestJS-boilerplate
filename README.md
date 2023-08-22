@@ -17,7 +17,7 @@ npm run local:db:generate-client
 npm run local:db:seed
 ```
 
-### 3. Set up host for authentication
+### how to set up host for authentication
 ```bash
 sudo vi /etc/hosts
 # as-is : 127.0.0.1  localhost
