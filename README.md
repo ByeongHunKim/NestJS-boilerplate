@@ -17,6 +17,14 @@ npm run local:db:generate-client
 npm run local:db:seed
 ```
 
+### 3. Set up host for authentication
+```bash
+sudo vi /etc/hosts
+# as-is : 127.0.0.1  localhost
+# to-be 
+127.0.0.1  local.api.test.kr
+```
+
 ## how to start nestjs project
 ```bash
 npm install
