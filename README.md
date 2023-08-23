@@ -1,23 +1,33 @@
 # NestJS Boilerplate
 
-## how to generate nestjs project
-```bash
-nest new nestjs-boilerplate
+## Environment
+
+- `Webstorm IDE`
+- `Node v16.x`
+- `NPM` for the package manager
+- `Postgres 12` with [Prisma](https://www.prisma.io/) library
+- [Nestjs](https://github.com/nestjs/nest) for basic webserver
+- `Docker` for the database and test env container (Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) recommended)
+- Default exposed ports below, You can change this by modifing `infra/docker-compose.yml` file
+
+```
+POSTGRES_DB: 5432
+WEB_SERVER: 8080
 ```
 
-## how to set up infra
+## Before Start
+
+### Step 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for running Postgres
+
+### Step 2. Set up infra
 ```bash
 docker-compose -f infra/docker-compose.yml up -d
 ```
 
-## how to set up database
-```bash
-npm run local:db:push
-npm run local:db:generate-client
-npm run local:db:seed
-```
+## Environment Injection
 
-### how to set up host for authentication
+### Step 1. Setting domain for authentication
+
 ```bash
 sudo vi /etc/hosts
 # as-is : 127.0.0.1  localhost
@@ -25,28 +35,25 @@ sudo vi /etc/hosts
 127.0.0.1  local.api.test.kr
 ```
 
-## how to start nestjs project
+### Step 2. Copy env.example to .env 
+
+- basic env values are already set up
+```bash
+cp .env.exapmle .env
+```
+
+## How to use
+
+### Step 1. Set up Prisma
+```bash
+npm run local:db:push
+npm run local:db:generate-client
+npm run local:db:seed
+```
+
+### Step 2. Install dependencies
 ```bash
 npm install
 npm run start:dev
 ```
 
-## how to create module, service, controller together in nestjs project
-```bash
-nest g resource auth --no-spec
-```
-
-## todo list
-
-- [x] generate new nest project
-- [x] clean tha project
-- [x] infra set up (postgres DB)
-- [x] swagger docs
-- [x] add commands in package json about setting prisma
-- [x] env setup ( config )
-- [x] create auth module with basic controller and service
-- [x] init prisma schema with module and service
-- [x] work on auth service ( implement jwt, dto with validation pipe )
-- [x] jwt strategy and guard and allow cookies
-- [x] create users module with controller and service
-- [x] wrap up and conclusions
