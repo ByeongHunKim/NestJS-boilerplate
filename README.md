@@ -66,6 +66,6 @@ npm run local:db:seed
 npm run start:dev
 ```
 
-## Swagger api
+## [Swagger api](http://localhost:8080/api#/)
 
 ![Alt text](image.png)
