@@ -6,7 +6,7 @@
 - `Node v16.x`
 - `NPM` for the package manager
 - [Postman](https://www.postman.com/downloads/) for API endpoint testing and interaction
-- `Postgres 15.3` with [Prisma](https://www.prisma.io/) library
+- `Postgres 15.3` with [Prisma](https://www.prisma.io/) library and [DBeaver](https://dbeaver.io/download/) Database Tool
 - [Nestjs](https://github.com/nestjs/nest) for basic webserver
 - `Docker` for the database and test env container (Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) recommended)
 - Default exposed ports below, You can change this by modifing `infra/docker-compose.yml` file
