@@ -20,6 +20,7 @@ WEB_SERVER: 8080
 ### Step 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for running Postgres
 
 ### Step 2. Set up infra
+
 ```bash
 docker-compose -f infra/docker-compose.yml up -d
 ```
@@ -31,15 +32,16 @@ docker-compose -f infra/docker-compose.yml up -d
 ```bash
 sudo vi /etc/hosts
 # as-is : 127.0.0.1  localhost
-# to-be 
+# to-be
 127.0.0.1  local.api.test.kr
 ```
 
-### Step 2. Copy env.example to .env 
+### Step 2. Copy env.example to .env
 
 - basic env values are already set up
+
 ```bash
-cp .env.exapmle .env
+cp .env.example .env
 ```
 
 ## How to use
@@ -51,6 +53,7 @@ npm install
 ```
 
 ### Step 2. Set up Prisma
+
 ```bash
 npm run local:db:push
 npm run local:db:generate-client
@@ -58,7 +61,11 @@ npm run local:db:seed
 ```
 
 ### Step 3. Start server
+
 ```bash
 npm run start:dev
 ```
 
+## Swagger api
+
+![Alt text](image.png)
