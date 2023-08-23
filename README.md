@@ -5,6 +5,7 @@
 - `Webstorm IDE`
 - `Node v16.x`
 - `NPM` for the package manager
+- [Postman](https://www.postman.com/downloads/) for API endpoint testing and interaction
 - `Postgres 15.3` with [Prisma](https://www.prisma.io/) library
 - [Nestjs](https://github.com/nestjs/nest) for basic webserver
 - `Docker` for the database and test env container (Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) recommended)
