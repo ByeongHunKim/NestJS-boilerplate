@@ -5,7 +5,7 @@
 - `Webstorm IDE`
 - `Node v16.x`
 - `NPM` for the package manager
-- `Postgres 12` with [Prisma](https://www.prisma.io/) library
+- `Postgres 15.3` with [Prisma](https://www.prisma.io/) library
 - [Nestjs](https://github.com/nestjs/nest) for basic webserver
 - `Docker` for the database and test env container (Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) recommended)
 - Default exposed ports below, You can change this by modifing `infra/docker-compose.yml` file
@@ -44,16 +44,21 @@ cp .env.exapmle .env
 
 ## How to use
 
-### Step 1. Set up Prisma
+### Step 1. Install dependencies
+
+```bash
+npm install
+```
+
+### Step 2. Set up Prisma
 ```bash
 npm run local:db:push
 npm run local:db:generate-client
 npm run local:db:seed
 ```
 
-### Step 2. Install dependencies
+### Step 3. Start server
 ```bash
-npm install
 npm run start:dev
 ```
 
