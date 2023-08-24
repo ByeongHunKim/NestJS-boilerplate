@@ -15,7 +15,7 @@ export class CreateUserDto {
   @ApiProperty()
   email: string
 
-  @ApiProperty()
+  @ApiProperty({ default: 'LOCAL' })
   loginType: LoginType
 
   @ApiProperty()
