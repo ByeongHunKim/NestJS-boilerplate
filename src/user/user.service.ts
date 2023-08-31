@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { PrismaProvider } from '@/src/common/prisma/prisma.provider'
 import { LoginType, User, UserRole } from '@prisma/client'
 import {
   LocalUserCreateDto,
@@ -18,7 +17,6 @@ import { UserRepository } from '@/src/user/user.repository'
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaProvider, // todo remove this and use UserRepository
     private nameGenerator: NameGenerator,
     private userRepository: UserRepository,
   ) {}
@@ -32,11 +30,7 @@ export class UserService {
   }
 
   async findById(id: number): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    })
+    return this.userRepository.findById(id)
   }
 
   async validateUserExists(id: number): Promise<User> {
@@ -47,28 +41,8 @@ export class UserService {
     return user
   }
 
-  async findByEmail(email: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    })
-  }
-
-  async findByUsername(username: string): Promise<User> {
-    return this.prisma.user.findFirst({
-      where: {
-        username,
-      },
-    })
-  }
-
   async isExistByUsername(username: string): Promise<boolean> {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        username,
-      },
-    })
+    const user = await this.userRepository.findByUsername(username)
     return !!user
   }
 
@@ -91,12 +65,9 @@ export class UserService {
 
     const fullCreateDto: LocalUserCreateDto = createDto as LocalUserCreateDto
     const hash = await hashPassword(fullCreateDto.password)
-    return this.prisma.user.create({
-      data: {
-        ...fullCreateDto,
-        password: hash,
-      },
-    })
+
+    fullCreateDto.password = hash
+    return this.userRepository.createLocalUser(fullCreateDto)
   }
 
   private async setDefaultUserProperties(
@@ -109,18 +80,11 @@ export class UserService {
   }
 
   async updateRefreshToken(id: number, refreshToken: string): Promise<User> {
-    return this.prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        refreshToken,
-      },
-    })
+    return this.userRepository.updateRefreshToken(id, refreshToken)
   }
 
   async validateLocalUser(username: string, password: string): Promise<User> {
-    const user = await this.findByUsername(username)
+    const user = await this.userRepository.findByUsername(username)
     if (!user) {
       throw new UnauthorizedException(`User (username: ${username}) not exist`)
     }
@@ -140,11 +104,7 @@ export class UserService {
     let retry = 0
     do {
       const candidate = this.nameGenerator.generateRandomName()
-      const existedUser = await this.prisma.user.findFirst({
-        where: {
-          nickName: candidate,
-        },
-      })
+      const existedUser = await this.userRepository.findByUsername(candidate)
       if (!existedUser) {
         return candidate
       }
