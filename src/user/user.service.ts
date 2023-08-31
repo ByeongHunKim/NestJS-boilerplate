@@ -13,25 +13,21 @@ import { comparePassword, hashPassword } from '@/src/user/password.util'
 import { UserDto } from '@/src/user/dto/user.dto'
 import EntityNotFoundError from '@/src/error/NotFoundError'
 import EntityConflictError from '@/src/error/ConflictError'
+import { UserRepository } from '@/src/user/user.repository'
 
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaProvider,
+    private prisma: PrismaProvider, // todo remove this and use UserRepository
     private nameGenerator: NameGenerator,
+    private userRepository: UserRepository,
   ) {}
 
-  async find(offset = 0, limit = 100): Promise<UserDto[]> {
-    const users = await this.prisma.user.findMany({
-      where: {
-        role: UserRole.USER,
-      },
-      orderBy: {
-        id: 'asc',
-      },
-      skip: offset * limit,
-      take: limit,
-    })
+  async find(offset?: number, limit?: number): Promise<UserDto[]> {
+    // todo how to make this better code?
+    if (isNaN(offset)) offset = 0
+    if (isNaN(limit)) limit = 100
+    const users = await this.userRepository.find(offset, limit)
     return this.mapUsersToUserDtos(users)
   }
 
