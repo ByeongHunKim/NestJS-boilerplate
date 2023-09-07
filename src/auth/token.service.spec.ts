@@ -75,10 +75,22 @@ describe('TokenService', () => {
         expect(payload![payloadKey]).toBeDefined()
       })
     })
+
+    const expectedAccessTokenPayloadKeys = ['iat', 'exp', 'iss', 'sub', 'role']
+    it('access token has a role when issue token', async () => {
+      const accessToken = await tokenService.issueToken(TokenType.ACCESS, user)
+      const payload = jwtService.decode(accessToken)
+      expect(Object.keys(payload!)).toHaveLength(
+        expectedAccessTokenPayloadKeys.length,
+      )
+      expectedAccessTokenPayloadKeys.forEach((payloadKey) => {
+        expect(payload![payloadKey]).toBeDefined()
+      })
+    })
   })
 
   describe('#verifyToken', () => {
-    it('verifyToken should return token payload when token string is correct', async () => {
+    it('should return token payload when token string is correct', async () => {
       const accessToken = await tokenService.issueToken(TokenType.ACCESS, user)
       const payload = await tokenService.verifyToken<AccessTokenPayload>(
         accessToken,
@@ -86,10 +98,23 @@ describe('TokenService', () => {
       expect(payload).toBeDefined()
     })
 
-    it('verifyToken should throw error when token string is incorrect', async () => {
+    it('should throw error when token string is incorrect', async () => {
       const notIncorrectToken = 'not.incorrect'
       await expect(
         tokenService.verifyToken<AccessTokenPayload>(notIncorrectToken),
+      ).rejects.toThrowError()
+    })
+
+    it('should throw issuer', async () => {
+      const accessToken = await tokenService.issueToken(
+        TokenType.ACCESS,
+        user,
+        {
+          issuer: 'not.test',
+        },
+      )
+      await expect(
+        tokenService.verifyToken<AccessTokenPayload>(accessToken),
       ).rejects.toThrowError()
     })
   })
