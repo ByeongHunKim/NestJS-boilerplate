@@ -33,6 +33,11 @@ interface TokenOption {
   expireSeconds: number
 }
 
+interface IssueTokenOption {
+  now?: number
+  issuer?: string
+}
+
 @Injectable()
 export class TokenService {
   private readonly jwtIssuer: string
@@ -65,16 +70,16 @@ export class TokenService {
   async issueToken(
     tokenType: TokenType,
     user: User,
-    now?: number,
+    overrideOption?: IssueTokenOption,
   ): Promise<string> {
     invariant(!!user, 'User should not be empty')
-    const option = this.tokenOptions[tokenType]
-    const nowSeconds = now ?? moment().second()
-    const expiresIn = nowSeconds + option.expireSeconds
+    const tokenOption = this.tokenOptions[tokenType]
+    const nowSeconds = overrideOption?.now ?? moment().second()
+    const expiresIn = nowSeconds + tokenOption.expireSeconds
     const payload = this.getPayload(tokenType, user)
 
     return this.jwtService.signAsync(payload, {
-      issuer: this.jwtIssuer,
+      issuer: overrideOption?.issuer ?? this.jwtIssuer,
       subject: String(user.id),
       expiresIn: expiresIn,
       secret: this.jwtSecret,
@@ -82,8 +87,16 @@ export class TokenService {
     })
   }
 
-  async verifyToken<T extends TokenPayload>(token: string): Promise<T | null> {
-    return this.jwtService.verifyAsync(token, {
+  /**
+   * @throws JsonWebTokenError when token is invalid
+   *
+   * 주의: JsonWebTokenError 는 JsonWebTokenError prototype 을 가지고 있지 않고,
+   * Error prototype 을 가지고 있어, e instanceof JsonWebTokenError 로 검사하면 안된다.
+   * e.name === 'JsonWebTokenError' 로 검사를 해야 한다
+   */
+  async verifyToken<T extends TokenPayload>(token: string): Promise<T> {
+    return this.jwtService.verifyAsync<T>(token, {
+      issuer: this.jwtIssuer,
       secret: this.jwtSecret,
     })
   }

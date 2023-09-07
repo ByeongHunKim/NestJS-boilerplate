@@ -49,7 +49,7 @@ export class AuthService {
   async verifyAndRenewAccessToken(req: Request, res: Response) {
     const refreshToken = this.cookieService.getToken(req, TokenType.REFRESH)
     if (!refreshToken) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('Refresh token does not exist')
     }
 
     const decoded = await this.tokenService.verifyToken<RefreshTokenPayload>(
@@ -59,11 +59,11 @@ export class AuthService {
     const user = await this.userService.findById(userId)
 
     if (!user) {
-      throw new Error(`Not exist user: ${userId}`)
+      throw new UnauthorizedException(`User id: ${userId} does not exist`)
     }
 
     if (user.refreshToken !== refreshToken) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('Refresh token is not matched')
     }
 
     await this.renewAccessToken(res, user)
@@ -72,9 +72,19 @@ export class AuthService {
   async logout(req: Request, res: Response) {
     const refreshToken = this.cookieService.getToken(req, TokenType.REFRESH)
     if (refreshToken) {
-      const decoded = await this.tokenService.verifyToken<RefreshTokenPayload>(
-        refreshToken,
-      )
+      let decoded
+
+      try {
+        decoded = await this.tokenService.verifyToken<RefreshTokenPayload>(
+          refreshToken,
+        )
+      } catch (e) {
+        if (e.name === 'JsonWebTokenError') {
+          throw new UnauthorizedException(e.message)
+        }
+        throw e
+      }
+
       const userId = Number(decoded.sub)
       const user = await this.userService.findById(userId)
       if (user && user.refreshToken === refreshToken) {
@@ -89,7 +99,7 @@ export class AuthService {
     const refreshToken = await this.tokenService.issueToken(
       TokenType.REFRESH,
       user,
-      now,
+      { now },
     )
     await this.userService.updateRefreshToken(user.id, refreshToken)
     this.cookieService.setCookie(res, TokenType.REFRESH, refreshToken)
@@ -99,7 +109,7 @@ export class AuthService {
     const accessToken = await this.tokenService.issueToken(
       TokenType.ACCESS,
       user,
-      now,
+      { now },
     )
     this.cookieService.setCookie(res, TokenType.ACCESS, accessToken)
   }
