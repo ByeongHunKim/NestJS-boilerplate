@@ -89,7 +89,7 @@ export class UserService {
       throw new UnauthorizedException(`User (username: ${username}) not exist`)
     }
 
-    const matched = comparePassword(user.password, password)
+    const matched = comparePassword(password, user.password!)
     if (!matched) {
       throw new UnauthorizedException(
         `User(username: ${username}) password does not matched`,
