@@ -90,7 +90,6 @@ export class UserService {
     }
 
     const matched = await comparePassword(password, user.password!)
-    console.log('matched', matched)
     if (!matched) {
       throw new UnauthorizedException(
         `User(username: ${username}) password does not matched`,
