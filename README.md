@@ -34,8 +34,10 @@ docker-compose -f infra/docker-compose.yml up -d
 sudo vi /etc/hosts
 # as-is : 127.0.0.1  localhost
 # to-be
-127.0.0.1  local.api.test.kr
+127.0.0.1  api.local.test.kr
 ```
+
+- `http://api.local.test.kr:8080/api`
 
 ### Step 2. Copy env.example to .env
 
