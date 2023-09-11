@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common'
 import { PrismaProvider } from '@/src/common/prisma/prisma.provider'
 import { User, UserRole } from '@prisma/client'
 import { LocalUserCreateDto } from '@/src/user/dto/user.create.dto'
+import invariant from 'tiny-invariant'
 
 @Injectable()
 export class UserRepository {
   constructor(private prisma: PrismaProvider) {}
 
   async find(offset: number, limit: number): Promise<User[]> {
+    invariant(offset >= 0, 'offset should be >= 0')
+    invariant(limit > 0, 'limit should be > 0')
+
     return this.prisma.user.findMany({
       where: { role: UserRole.USER },
       orderBy: { id: 'asc' },
