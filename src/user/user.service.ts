@@ -21,10 +21,7 @@ export class UserService {
     private userRepository: UserRepository,
   ) {}
 
-  async find(offset?: number, limit?: number): Promise<UserDto[]> {
-    // todo how to make this better code?
-    if (isNaN(offset)) offset = 0
-    if (isNaN(limit)) limit = 100
+  async find(offset: number, limit: number): Promise<UserDto[]> {
     const users = await this.userRepository.find(offset, limit)
     return this.mapUsersToUserDtos(users)
   }
