@@ -17,6 +17,7 @@ import NotFoundError from '@/src/error/NotFoundError'
 import { CreateUserDto } from '@/src/user/dto/user.create.dto'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
 import ConflictError from '@/src/error/ConflictError'
+import { NumberWithDefaultPipe } from '@/src/common/pipes/number-with-default-pipe.service'
 
 @Controller('api/v1/users')
 export class UserController {
@@ -32,8 +33,8 @@ export class UserController {
     name: 'limit',
   })
   async listUsers(
-    @Query('offset') offset: number,
-    @Query('limit') limit: number,
+    @Query('offset', new NumberWithDefaultPipe(0)) offset,
+    @Query('limit', new NumberWithDefaultPipe(6)) limit,
   ): Promise<UserDto[]> {
     return await this.userService.find(offset, limit)
   }
