@@ -48,6 +48,10 @@ export class AuthController {
 
   @HttpCode(200)
   @Post('/logout')
+  @ApiOperation({
+    summary: 'Local logout',
+    description: '로그아웃',
+  })
   async logout(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
