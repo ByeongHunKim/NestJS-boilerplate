@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from '@/src/auth/auth.service'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { AuthenticatedUser } from '@/src/auth/user.decorator'
 
 @Controller('auth')
 @ApiTags('authentication')
@@ -23,7 +24,12 @@ export class AuthController {
   }
 
   @HttpCode(200)
-  @Post('/local')
+  @Post('/login')
+  @ApiOperation({
+    summary: 'Local login',
+    description:
+      'id, password 로 로그인을 하며, password 가 맞을 시 로그인 됩니다',
+  })
   @UseGuards(AuthGuard('local'))
   @ApiBody({
     schema: {
@@ -33,12 +39,19 @@ export class AuthController {
       },
     },
   })
-  async localLogin(@Req() req, @Res({ passthrough: true }) res): Promise<void> {
-    await this.authService.localLogin(req.user, res)
+  async localLogin(
+    @AuthenticatedUser() user,
+    @Res({ passthrough: true }) res,
+  ): Promise<void> {
+    await this.authService.localLogin(user, res)
   }
 
   @HttpCode(200)
   @Post('/logout')
+  @ApiOperation({
+    summary: 'Local logout',
+    description: '로그아웃',
+  })
   async logout(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
