@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from '@/src/auth/auth.service'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { AuthenticatedUser } from '@/src/auth/user.decorator'
 
 @Controller('auth')
 @ApiTags('authentication')
@@ -33,8 +34,11 @@ export class AuthController {
       },
     },
   })
-  async localLogin(@Req() req, @Res({ passthrough: true }) res): Promise<void> {
-    await this.authService.localLogin(req.user, res)
+  async localLogin(
+    @AuthenticatedUser() user,
+    @Res({ passthrough: true }) res,
+  ): Promise<void> {
+    await this.authService.localLogin(user, res)
   }
 
   @HttpCode(200)
