@@ -24,7 +24,12 @@ export class AuthController {
   }
 
   @HttpCode(200)
-  @Post('/local')
+  @Post('/login')
+  @ApiOperation({
+    summary: 'Local login',
+    description:
+      'id, password 로 로그인을 하며, password 가 맞을 시 로그인 됩니다',
+  })
   @UseGuards(AuthGuard('local'))
   @ApiBody({
     schema: {
