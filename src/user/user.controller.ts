@@ -18,10 +18,14 @@ import { CreateUserDto } from '@/src/user/dto/user.create.dto'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
 import ConflictError from '@/src/error/ConflictError'
 import { NumberWithDefaultPipe } from '@/src/common/pipes/number-with-default-pipe.service'
+import { UserMapper } from '@/src/user/user.mapper'
 
 @Controller('api/v1/users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly userMapper: UserMapper,
+  ) {}
 
   @Get()
   @Roles(UserRole.ADMIN)
@@ -45,9 +49,10 @@ export class UserController {
   async getUserById(@Param('userId') userId: number): Promise<UserDto> {
     try {
       const user = await this.userService.validateUserExists(userId)
-      return this.userService.mapUserToUserDto(user)
+      return this.userMapper.mapUserToUserDto(user)
     } catch (e) {
       if (e instanceof NotFoundError) {
+        // todo error handling
         throw new NotFoundException(e.message)
       }
       throw e
@@ -63,7 +68,7 @@ export class UserController {
   async createUser(@Body() createDto: CreateUserDto): Promise<UserDto> {
     try {
       const user = await this.userService.createLocalUser(createDto)
-      return this.userService.mapUserToUserDto(user)
+      return this.userMapper.mapUserToUserDto(user)
     } catch (e) {
       if (e instanceof ConflictError) {
         throw new ConflictException(e.message)
