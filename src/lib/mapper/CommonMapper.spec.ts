@@ -1,4 +1,4 @@
-import { CommonMapper } from '@/src/lib/mapper/CommonMapper'
+import { CommonMapper } from '../mapper/CommonMapper'
 
 class TestCommonMapper extends CommonMapper {
   public mapSourceToTarget(source, target) {
