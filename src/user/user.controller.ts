@@ -1,18 +1,9 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Param,
-  NotFoundException,
-  Post,
-  Body,
-} from '@nestjs/common'
+import { Controller, Get, Query, Param, Post, Body } from '@nestjs/common'
 import { UserService } from '@/src/user/user.service'
 import { UserDto } from '@/src/user/dto/user.dto'
 import { UserRole } from '@prisma/client'
 import { ApiQuery, ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger'
 import { Roles } from '@/src/auth/rbac/roles.decorator'
-import NotFoundError from '@/src/error/NotFoundError'
 import { CreateUserDto } from '@/src/user/dto/user.create.dto'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
 import { NumberWithDefaultPipe } from '@/src/common/pipes/number-with-default-pipe.service'
@@ -53,16 +44,8 @@ export class UserController {
     description: '특정 유저 정보를 가져옵니다',
   })
   async getUserById(@Param('userId') userId: number): Promise<UserDto> {
-    try {
-      const user = await this.userService.validateUserExists(userId)
-      return this.userMapper.mapUserToUserDto(user)
-    } catch (e) {
-      if (e instanceof NotFoundError) {
-        // todo error handling
-        throw new NotFoundException(e.message)
-      }
-      throw e
-    }
+    const user = await this.userService.validateUserExists(userId)
+    return this.userMapper.mapUserToUserDto(user)
   }
 
   @Post()
