@@ -3,9 +3,17 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
 import { AppModule } from '@/src/app.module'
 import { ValidationPipe } from '@nestjs/common'
+import { AppExceptionFilter } from '@/src/app.exception.filter'
+import { CustomLogger } from '@/src/logger.service'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  })
+
+  app.useLogger(app.get(CustomLogger))
+
+  // todo disable swagger on production
   const config = new DocumentBuilder()
     .setTitle('NestJS APIs')
     .setDescription('This is a sample NestJS Boilerplate REST API')
@@ -23,6 +31,8 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
     credentials: true,
   })
+
+  app.useGlobalFilters(new AppExceptionFilter())
 
   app.useGlobalPipes(
     new ValidationPipe({
