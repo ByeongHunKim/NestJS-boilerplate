@@ -37,8 +37,6 @@ sudo vi /etc/hosts
 127.0.0.1  api.local.test.kr
 ```
 
-- `http://api.local.test.kr:8080/api`
-
 ### Step 2. Copy env.example to .env
 
 - basic env values are already set up
@@ -69,6 +67,6 @@ npm run local:db:seed
 npm run start:dev
 ```
 
-## [Swagger api](http://localhost:8080/api#/)
+## Swagger docs
+### [link]((http://api.local.test.kr:8080/api))
 
-![Alt text](image.png)
