@@ -83,4 +83,5 @@ npm run start:dev
 - `B1000` - 
 - `B1100` - 
 - `B1200` - `ConflictError` - Error occurs when a user attempts to recreate data that already exists
+- `B1300` - `NotFoundError` - Error occurs when requested resource could not be found
 
