@@ -68,5 +68,5 @@ npm run start:dev
 ```
 
 ## Swagger docs
-### [link]((http://api.local.test.kr:8080/api))
+### [link](http://api.local.test.kr:8080/api)
 
