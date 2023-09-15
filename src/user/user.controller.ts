@@ -6,7 +6,6 @@ import {
   NotFoundException,
   Post,
   Body,
-  ConflictException,
 } from '@nestjs/common'
 import { UserService } from '@/src/user/user.service'
 import { UserDto } from '@/src/user/dto/user.dto'
@@ -16,7 +15,6 @@ import { Roles } from '@/src/auth/rbac/roles.decorator'
 import NotFoundError from '@/src/error/NotFoundError'
 import { CreateUserDto } from '@/src/user/dto/user.create.dto'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
-import ConflictError from '@/src/error/ConflictError'
 import { NumberWithDefaultPipe } from '@/src/common/pipes/number-with-default-pipe.service'
 import { UserMapper } from '@/src/user/user.mapper'
 
@@ -78,14 +76,7 @@ export class UserController {
     description: '일반 유저 회원가입에 쓰입니다',
   })
   async createUser(@Body() createDto: CreateUserDto): Promise<UserDto> {
-    try {
-      const user = await this.userService.createLocalUser(createDto)
-      return this.userMapper.mapUserToUserDto(user)
-    } catch (e) {
-      if (e instanceof ConflictError) {
-        throw new ConflictException(e.message)
-      }
-      throw e
-    }
+    const user = await this.userService.createLocalUser(createDto)
+    return this.userMapper.mapUserToUserDto(user)
   }
 }
