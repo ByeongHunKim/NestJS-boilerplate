@@ -11,7 +11,7 @@ import {
 import { UserService } from '@/src/user/user.service'
 import { UserDto } from '@/src/user/dto/user.dto'
 import { UserRole } from '@prisma/client'
-import { ApiQuery, ApiTags, ApiBody } from '@nestjs/swagger'
+import { ApiQuery, ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger'
 import { Roles } from '@/src/auth/rbac/roles.decorator'
 import NotFoundError from '@/src/error/NotFoundError'
 import { CreateUserDto } from '@/src/user/dto/user.create.dto'
@@ -36,6 +36,10 @@ export class UserController {
   @ApiQuery({
     name: 'limit',
   })
+  @ApiOperation({
+    summary: 'User info list',
+    description: '전체 유저 정보를 가져옵니다',
+  })
   async listUsers(
     @Query('offset', new NumberWithDefaultPipe(0)) offset,
     @Query('limit', new NumberWithDefaultPipe(6)) limit,
@@ -46,6 +50,10 @@ export class UserController {
   @Get('/:userId')
   @Roles(UserRole.ADMIN)
   @ApiTags('admin')
+  @ApiOperation({
+    summary: 'User info',
+    description: '특정 유저 정보를 가져옵니다',
+  })
   async getUserById(@Param('userId') userId: number): Promise<UserDto> {
     try {
       const user = await this.userService.validateUserExists(userId)
@@ -64,6 +72,10 @@ export class UserController {
   @PublicApi()
   @ApiBody({
     type: CreateUserDto,
+  })
+  @ApiOperation({
+    summary: 'Local signup',
+    description: '일반 유저 회원가입에 쓰입니다',
   })
   async createUser(@Body() createDto: CreateUserDto): Promise<UserDto> {
     try {
