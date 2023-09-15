@@ -10,8 +10,8 @@ import { NameGenerator } from '@/src/user/name.generator'
 import invariant from 'tiny-invariant'
 import { comparePassword, hashPassword } from '@/src/user/password.util'
 import { UserDto } from '@/src/user/dto/user.dto'
-import EntityNotFoundError from '@/src/error/NotFoundError'
-import EntityConflictError from '@/src/error/ConflictError'
+import NotFoundError from '@/src/error/NotFoundError'
+import ConflictError from '@/src/error/ConflictError'
 import { UserRepository } from '@/src/user/user.repository'
 
 @Injectable()
@@ -33,7 +33,7 @@ export class UserService {
   async validateUserExists(id: number): Promise<User> {
     const user = await this.findById(id)
     if (!user) {
-      throw new EntityNotFoundError(`User id: ${id} not exist`)
+      throw new NotFoundError({ message: `User id: ${id} not exist` })
     }
     return user
   }
@@ -55,9 +55,9 @@ export class UserService {
       createDto.username,
     )
     if (isUsernameDuplicated) {
-      throw new EntityConflictError(
-        `username: ${createDto.username} duplicated`,
-      )
+      throw new ConflictError({
+        message: `username: ${createDto.username} duplicated`,
+      })
     }
 
     const fullCreateDto: LocalUserCreateDto = createDto as LocalUserCreateDto
