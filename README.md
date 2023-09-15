@@ -67,6 +67,20 @@ npm run local:db:seed
 npm run start:dev
 ```
 
+---
+
 ## Swagger docs
-### [link](http://api.local.test.kr:8080/api)
+### Step 1. Domain should be ready on your local (e.g api.local.test.kr)
+### Step 2. Start server
+### Step 3. you can check and testing apis on this [link](http://api.local.test.kr:8080/api)
+
+---
+
+## Error codes
+
+### Common
+
+- `B1000` - 
+- `B1100` - 
+- `B1200` - `ConflictError` - Error occurs when a user attempts to recreate data that already exists
 
