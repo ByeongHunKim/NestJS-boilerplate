@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { AuthModule } from '@/src/auth/auth.module'
-import config from '@/config'
+import { loadConfig, loadEnvFilePath } from '@/config'
 import { ConfigModule } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
 import { RolesGuard } from '@/src/auth/rbac/roles.guard'
@@ -10,8 +10,8 @@ import { HealthModule } from '@/src/health/health.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env.local', '.env'], // todo using loadEnvFilePath() for handling many environment
-      load: [config],
+      envFilePath: loadEnvFilePath(),
+      load: [loadConfig],
       isGlobal: true,
     }),
     HealthModule,
