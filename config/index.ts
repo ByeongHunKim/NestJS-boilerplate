@@ -1,3 +1,10 @@
+import { env } from 'node:process'
+import _ from 'lodash'
+
+type AppEnv = 'local' | 'development' | 'production'
+
+export type EnvKey = 'PORT' | 'DATABASE_URL' | 'AUTH_JWT_SECRET'
+
 export interface Config {
   port: number
   database: {
@@ -19,23 +26,18 @@ export interface Config {
   }
 }
 
-export default (): Config => ({
-  port: parseInt(process.env.PORT, 10) || 8080,
-  database: {
-    url: process.env.DATABASE_URL,
-  },
-  auth: {
-    jwt: {
-      issuer: 'localhost',
-      secret: process.env.AUTH_JWT_SECRET,
-      algorithm: 'HS256',
-      cookieDomain: process.env.COOKIE_DOMAIN,
-      refreshToken: {
-        expires: 7 * 24 * 60 * 60 * 1000, // 1 week
-      },
-      accessToken: {
-        expires: 60 * 60 * 1000, // 1 hour
-      },
-    },
-  },
-})
+function getAppEnv(defaultEnv: AppEnv): AppEnv {
+  return env.NODE_ENV !== undefined ? (env.NODE_ENV as AppEnv) : defaultEnv
+}
+
+const appEnv: AppEnv = getAppEnv('local')
+
+export async function loadConfig(): Promise<Partial<Config>> {
+  const baseConfig = await import('./base')
+  const appEnvConfig = await import(`./${appEnv}`)
+  return _.merge(baseConfig['default'], appEnvConfig['default'])
+}
+
+export function loadEnvFilePath(): string[] {
+  return [`.env.${appEnv}`, '.env']
+}
