@@ -1,3 +1,4 @@
+import { env } from 'node:process'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
@@ -13,13 +14,15 @@ async function bootstrap() {
 
   app.useLogger(app.get(CustomLogger))
 
-  // todo disable swagger on production
-  const config = new DocumentBuilder()
-    .setTitle('NestJS APIs')
-    .setDescription('This is a sample NestJS Boilerplate REST API')
-    .build()
-  const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, document)
+  if (env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('NestJS APIs')
+      .setDescription('This is a sample NestJS Boilerplate REST API')
+      .setVersion('1.0')
+      .build()
+    const document = SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup('api', app, document)
+  }
 
   app.use(cookieParser())
 
