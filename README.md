@@ -1,5 +1,14 @@
-# NestJS Boilerplate
+# NestJS Boilerplate - v1.0.0
 
+## Branch Naming Convention for Releases
+For our release branches, we use the following naming convention:
+```markdown
+release/v[version]
+```
+- Example: `release/v1.0.0`
+- In this convention, `[version]` represents the release version. We adhere to the Semantic Versioning (SemVer) rules for our version numbers. For more details on SemVer, please visit [Semantic Versioning](https://semver.org/).
+
+---
 ## Environment
 
 - `Webstorm IDE`
