@@ -18,13 +18,18 @@ enum UserRole {
 // SOCIAL can be added
 enum LoginType {
   LOCAL
+  SOCIAL
+}
+
+enum SocialType {
+  GOOGLE
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  nickName String @unique
-  role UserRole
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  nickName  String    @unique
+  role      UserRole
   loginType LoginType
 
   // Local type properties
@@ -32,8 +37,8 @@ model User {
   password String?
 
   // Social type properties
-  // socialId String?
-  // socialType SocialType?
+  socialId     String?
+  socialType   SocialType?
   refreshToken String?
 
   createdAt DateTime @default(now())
