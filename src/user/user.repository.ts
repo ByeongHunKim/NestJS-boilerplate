@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaProvider } from '@/src/common/prisma/prisma.provider'
 import { User, UserRole } from '@prisma/client'
-import { LocalUserCreateDto } from '@/src/user/dto/user.create.dto'
+import {
+  LocalUserCreateDto,
+  UserCreateDto,
+} from '@/src/user/dto/user.create.dto'
 import invariant from 'tiny-invariant'
 
 @Injectable()
@@ -41,6 +44,12 @@ export class UserRepository {
       where: {
         username,
       },
+    })
+  }
+
+  async createSocialUser(userCreateDto: UserCreateDto): Promise<User> {
+    return this.prisma.user.create({
+      data: userCreateDto,
     })
   }
 
