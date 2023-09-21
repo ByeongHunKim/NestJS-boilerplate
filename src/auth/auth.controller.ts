@@ -1,16 +1,34 @@
 import { Request, Response } from 'express'
-import { Controller, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  HttpCode,
+  Post,
+  Get,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from '@/src/auth/auth.service'
 import { PublicApi } from '@/src/auth/rbac/publicApi.decorator'
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBody,
+  ApiExcludeEndpoint,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 import { AuthenticatedUser } from '@/src/auth/user.decorator'
+import { GoogleAuthGuard } from '@/src/auth/auth.guard.decorator'
+import { ConfigService } from '@nestjs/config'
 
 @Controller('auth')
 @ApiTags('authentication')
 @PublicApi()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('/token')
   @ApiOperation({
@@ -21,6 +39,27 @@ export class AuthController {
   async refreshToken(@Req() req, @Res() res) {
     await this.authService.verifyAndRenewAccessToken(req, res)
     res.send()
+  }
+
+  @Get('/google')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Google login', description: '구글 로그인' })
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  googleLogin(): void {}
+
+  @Get('/google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  @ApiExcludeEndpoint()
+  async googleLoginRedirect(
+    @AuthenticatedUser() user,
+    @Res({ passthrough: true }) res,
+  ): Promise<void> {
+    await this.authService.socialLoginOrSignUp(user, res)
+
+    const redirectTo = this.configService.get<string>(
+      'auth.redirectEndpointAfterSocialLogin',
+    )
+    res.redirect(302, redirectTo)
   }
 
   @HttpCode(200)

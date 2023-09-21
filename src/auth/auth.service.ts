@@ -1,7 +1,10 @@
 import moment from 'moment'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { UserService } from '@/src/user/user.service'
-import { LocalLoginRequestDto } from '@/src/auth/dto/login.request.dto'
+import {
+  LocalLoginRequestDto,
+  SocialLoginRequestDto,
+} from '@/src/auth/dto/login.request.dto'
 import { Request, Response } from 'express'
 import { User } from '@prisma/client'
 import {
@@ -10,13 +13,16 @@ import {
   TokenType,
 } from '@/src/auth/token.service'
 import { CookieService } from '@/src/auth/cookie.service'
+import { UserRepository } from '@/src/user/user.repository'
+import { SimpleSocialUserCreateDto } from '@/src/user/dto/user.create.dto'
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private tokenService: TokenService,
-    private cookieService: CookieService,
+    private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
+    private readonly tokenService: TokenService,
+    private readonly cookieService: CookieService,
   ) {}
 
   async validateUser(req: Request): Promise<User | null> {
@@ -27,6 +33,19 @@ export class AuthService {
     const decoded = await this.tokenService.verifyToken(accessToken)
     const userId = Number(decoded.sub)
     return this.userService.findById(userId)
+  }
+
+  async socialLoginOrSignUp(
+    loginRequest: SocialLoginRequestDto,
+    res: Response,
+  ): Promise<void> {
+    let user = await this.userRepository.findByEmail(loginRequest.email)
+    if (!user) {
+      user = await this.userService.createSocialUser(
+        loginRequest as SimpleSocialUserCreateDto,
+      )
+      await this.doLogin(user, res)
+    }
   }
 
   async localLogin(
