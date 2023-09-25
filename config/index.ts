@@ -3,13 +3,19 @@ import _ from 'lodash'
 
 type AppEnv = 'local' | 'development' | 'production'
 
-export type EnvKey = 'PORT' | 'DATABASE_URL' | 'AUTH_JWT_SECRET'
+export type EnvKey =
+  | 'PORT'
+  | 'DATABASE_URL'
+  | 'AUTH_JWT_SECRET'
+  | 'GOOGLE_OAUTH_CLIENT_ID'
+  | 'GOOGLE_OAUTH_CLIENT_SECRET'
 
 export interface Config {
   port: number
   database: {
     url: string
   }
+  serverBaseUrl: string
   auth: {
     jwt: {
       issuer: string
@@ -22,6 +28,10 @@ export interface Config {
       accessToken: {
         expires: number
       }
+    }
+    google: {
+      clientId: string
+      clientSecret: string
     }
   }
 }

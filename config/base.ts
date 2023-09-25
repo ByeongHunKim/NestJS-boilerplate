@@ -17,6 +17,10 @@ const base = {
         expires: 60 * 60 * 1000, // 1 hour
       },
     },
+    google: {
+      clientId: getEnvOrThrow('GOOGLE_OAUTH_CLIENT_ID'),
+      clientSecret: getEnvOrThrow('GOOGLE_OAUTH_CLIENT_SECRET'),
+    },
   },
 }
 

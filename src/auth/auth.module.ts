@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { AuthGuard } from '@/src/auth/auth.guard'
 import { TokenService } from '@/src/auth/token.service'
 import { CookieService } from '@/src/auth/cookie.service'
+import { GoogleOauthStrategy } from '@/src/auth/strategies/google.oauth.strategy'
 
 @Module({
   imports: [JwtModule, UserModule],
@@ -21,6 +22,7 @@ import { CookieService } from '@/src/auth/cookie.service'
       useClass: AuthGuard,
     },
     PrismaProvider,
+    GoogleOauthStrategy,
     LocalStrategy,
     AuthService,
     UserService,

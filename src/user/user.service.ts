@@ -4,7 +4,9 @@ import {
   LocalUserCreateDto,
   RequiredUserCreateDto,
   SimpleLocalUserCreateDto,
+  SimpleSocialUserCreateDto,
   SimpleUserCreateDto,
+  SocialUserCreateDto,
 } from '@/src/user/dto/user.create.dto'
 import { NameGenerator } from '@/src/user/name.generator'
 import invariant from 'tiny-invariant'
@@ -41,6 +43,17 @@ export class UserService {
   async isExistByUsername(username: string): Promise<boolean> {
     const user = await this.userRepository.findByUsername(username)
     return !!user
+  }
+
+  async createSocialUser(createDto: SimpleSocialUserCreateDto): Promise<User> {
+    invariant(createDto.loginType === LoginType.SOCIAL, 'Invalid loginType')
+    invariant(createDto.socialId?.length > 0, 'Invalid socialId')
+    invariant(createDto.socialType?.length > 0, 'Invalid socialType')
+
+    await this.setDefaultUserProperties(createDto)
+    const fullCreateDto: SocialUserCreateDto = createDto as SocialUserCreateDto
+
+    return this.userRepository.createSocialUser(fullCreateDto)
   }
 
   // TODO: apply userId, password policy (e.g. minLen)
