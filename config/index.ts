@@ -19,6 +19,7 @@ export interface Config {
   }
   serverBaseUrl: string
   auth: {
+    redirectEndpointAfterSocialLogin: string
     jwt: {
       issuer: string
       secret: string
