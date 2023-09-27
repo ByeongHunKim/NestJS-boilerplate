@@ -21,6 +21,10 @@ const base = {
       clientId: getEnvOrThrow('GOOGLE_OAUTH_CLIENT_ID'),
       clientSecret: getEnvOrThrow('GOOGLE_OAUTH_CLIENT_SECRET'),
     },
+    kakao: {
+      clientId: getEnvOrThrow('KAKAO_OAUTH_CLIENT_ID'),
+      clientSecret: getEnvOrThrow('KAKAO_OAUTH_CLIENT_SECRET'),
+    },
   },
 }
 

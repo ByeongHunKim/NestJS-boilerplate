@@ -9,6 +9,8 @@ export type EnvKey =
   | 'AUTH_JWT_SECRET'
   | 'GOOGLE_OAUTH_CLIENT_ID'
   | 'GOOGLE_OAUTH_CLIENT_SECRET'
+  | 'KAKAO_OAUTH_CLIENT_ID'
+  | 'KAKAO_OAUTH_CLIENT_SECRET'
 
 export interface Config {
   port: number
@@ -30,6 +32,10 @@ export interface Config {
       }
     }
     google: {
+      clientId: string
+      clientSecret: string
+    }
+    kakao: {
       clientId: string
       clientSecret: string
     }
