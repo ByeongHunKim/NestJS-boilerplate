@@ -1,7 +1,7 @@
 const development = {
   serverBaseUrl: '',
   auth: {
-    redirectEndpointAfterSocialLogin: 'https://www.bookpot.kr',
+    redirectEndpointAfterSocialLogin: 'https://www.test.kr',
     jwt: {
       issuer: 'api.dev.test.kr',
     },
