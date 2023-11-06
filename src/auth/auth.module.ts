@@ -12,6 +12,7 @@ import { AuthGuard } from '@/src/auth/auth.guard'
 import { TokenService } from '@/src/auth/token.service'
 import { CookieService } from '@/src/auth/cookie.service'
 import { GoogleOauthStrategy } from '@/src/auth/strategies/google.oauth.strategy'
+import { KakaoOauthStrategy } from '@/src/auth/strategies/kakao.oauth.strategy'
 
 @Module({
   imports: [JwtModule, UserModule],
@@ -23,6 +24,7 @@ import { GoogleOauthStrategy } from '@/src/auth/strategies/google.oauth.strategy
     },
     PrismaProvider,
     GoogleOauthStrategy,
+    KakaoOauthStrategy,
     LocalStrategy,
     AuthService,
     UserService,

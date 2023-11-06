@@ -18,8 +18,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { AuthenticatedUser } from '@/src/auth/user.decorator'
-import { GoogleAuthGuard } from '@/src/auth/auth.guard.decorator'
 import { ConfigService } from '@nestjs/config'
+import {
+  GoogleAuthGuard,
+  KakaoAuthGuard,
+} from '@/src/auth/auth.guard.decorator'
 
 @Controller('auth')
 @ApiTags('authentication')
@@ -51,6 +54,27 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @ApiExcludeEndpoint()
   async googleLoginRedirect(
+    @AuthenticatedUser() user,
+    @Res({ passthrough: true }) res,
+  ): Promise<void> {
+    await this.authService.socialLoginOrSignUp(user, res)
+
+    const redirectTo = this.configService.get<string>(
+      'auth.redirectEndpointAfterSocialLogin',
+    )
+    res.redirect(302, redirectTo)
+  }
+
+  @Get('/kakao')
+  @UseGuards(KakaoAuthGuard)
+  @ApiOperation({ summary: 'Kakao login', description: '카카오 로그인' })
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  kakaoLogin(): void {}
+
+  @Get('/kakao/redirect')
+  @UseGuards(KakaoAuthGuard)
+  @ApiExcludeEndpoint()
+  async kakaoLoginRedirect(
     @AuthenticatedUser() user,
     @Res({ passthrough: true }) res,
   ): Promise<void> {

@@ -7,3 +7,11 @@ export class GoogleAuthGuard extends AuthGuard('google') {
     }
   }
 }
+
+export class KakaoAuthGuard extends AuthGuard('kakao') {
+  getAuthenticateOptions(): IAuthModuleOptions<any> | undefined {
+    return {
+      prompt: 'login',
+    }
+  }
+}

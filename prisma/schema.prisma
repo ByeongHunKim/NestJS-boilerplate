@@ -23,6 +23,7 @@ enum LoginType {
 
 enum SocialType {
   GOOGLE
+  KAKAO
 }
 
 model User {
