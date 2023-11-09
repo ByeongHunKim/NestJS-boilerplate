@@ -17,3 +17,8 @@
   - `$ netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8080 connectaddress=` <- 여기에는 wsl2 ip
     - wsl2에서 `$ ip addr show` 로 찾아낼 수 있음
   - wsl2 에서도 host 세팅
+
+### 4. superbase 로 db 연결하기
+
+[prisma with superbase](https://supabase.com/partners/integrations/prisma)
+
