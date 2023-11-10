@@ -1,6 +1,8 @@
-import { User } from '@prisma/client'
-
-export type UserDto = Pick<
-  User,
-  'id' | 'email' | 'nickName' | 'loginType' | 'username' | 'createdAt'
->
+export class UserDto {
+  id: number
+  email: string
+  nickName: string
+  loginType: string
+  username: string
+  createdAt: Date
+}

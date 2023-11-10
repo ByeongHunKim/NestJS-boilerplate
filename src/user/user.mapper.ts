@@ -6,18 +6,13 @@ import { UserDto } from '@/src/user/dto/user.dto'
 @Injectable()
 export class UserMapper extends CommonMapper {
   mapUsersToUserDtos(users: User[]): UserDto[] {
-    return users.map(this.mapUserToUserDto)
+    return users.map((user) => this.mapUserToUserDto(user))
   }
 
-  // todo mapSourceToTarget() 사용 필요
   mapUserToUserDto(user: User): UserDto {
-    return {
-      id: user.id,
-      email: user.email,
-      nickName: user.nickName,
-      loginType: user.loginType,
-      username: user.username,
-      createdAt: user.createdAt,
-    }
+    const target = new UserDto()
+    // mapSourceToTarget 사용
+    this.mapSourceToTarget(user, target)
+    return target
   }
 }
